@@ -1,0 +1,41 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+.venv
+venv/
+.python-version
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# Tests & coverage
+.pytest_cache
+.coverage
+htmlcov
+.mypy_cache
+.ruff_cache
+
+# Docs & misc
+README.md
+*.md
+docs/
+tests/
+alembic/versions/__pycache__
+
+# Docker (tránh self-reference)
+Dockerfile
+docker-compose.yml
+.dockerignore
