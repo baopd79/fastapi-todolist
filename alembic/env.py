@@ -11,8 +11,7 @@ from app.core.config import settings
 # Import all models so SQLModel.metadata knows about them
 # IMPORTANT: every new model must be imported here, otherwise autogenerate
 # won't detect it.
-# from app.models.user import User  # noqa: F401  (will add when ready)
-# from app.models.todo import Todo  # noqa: F401
+from app.models import User
 
 # Alembic Config object
 config = context.config
