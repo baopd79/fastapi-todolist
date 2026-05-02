@@ -7,7 +7,7 @@ from app.schemas.auth import (
     LoginRequest,
     TokenResponse,
 )
-from app.core.deps import AuthServiceDep
+from app.core.deps import AuthServiceDep, CurrentUserDep
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -34,3 +34,9 @@ def register(
 def login(payload: LoginRequest, auth_service: AuthServiceDep) -> TokenResponse:
     access_token = auth_service.login(payload)
     return TokenResponse(access_token=access_token)
+
+
+@router.get("/me", response_model=UserResponse, summary="Get current user info")
+def get_me(current_user: CurrentUserDep) -> UserResponse:
+    """Return the authenticated user's public profile"""
+    return UserResponse.model_validate(current_user)

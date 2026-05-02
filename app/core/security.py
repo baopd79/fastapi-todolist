@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 from app.core.config import settings
 from jose import JWTError, jwt
 
-__pwd_context = CryptContext(schemes=["Argon2"], deprecated="auto")
+__pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def hash_password(plain_password: str) -> str:
