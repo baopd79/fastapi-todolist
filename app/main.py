@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from app.core.config import settings
+from app.api.v1 import api_router
 
 app = FastAPI(title=settings.APP_NAME, debug=settings.DEBUG)
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/", response_class=HTMLResponse)
