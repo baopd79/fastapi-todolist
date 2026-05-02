@@ -20,11 +20,10 @@ class User(SQLModel, table=True):
     email: str = Field(
         max_length=255,
         unique=True,
-        index=True,
         nullable=False,
         description="User email, store lowercase for case-insensitive matching",
     )
-    hash_password: str = Field(
+    hashed_password: str = Field(
         max_length=255,
         nullable=False,
         description="Argon2id hash, never store plaintext",
@@ -45,7 +44,7 @@ class User(SQLModel, table=True):
         ),
     )
 
-    update_at: datetime = Field(
+    updated_at: datetime = Field(
         default_factory=_utc_now,
         sa_column=Column(
             TIMESTAMP(timezone=True),
