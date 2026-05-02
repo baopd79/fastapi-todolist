@@ -1,13 +1,23 @@
+"""Domain-level exceptions with HTTP mapping.
+
+Exceptions carry their own status_code and error code, allowing a single
+centralized handler in main.py to translate them to HTTP responses.
+Service layer raises these; API layer never needs try/except per exception.
 """
-Domain-level exceptions
-These exceptions are raised by service layer and translated to HTTP responses by the API layer. Service layer should NEVER import HTTPException directly - keep business logic decoupled from web framework
-"""
+
+from typing import ClassVar
 
 
 class DomainError(Exception):
-    """Base class for all domain-level errors."""
+    """Base  class for all domain-level errors"""
 
-    pass
+    code: ClassVar[str] = "INTERNAL_ERROR"
+    status_code: ClassVar[int] = 500
+    default_message: ClassVar[str] = "An unexpected error occurred"
+
+    def __init__(self, message: str | None = None) -> None:
+        self.message = message or self.default_message
+        super().__init__(self.message)
 
 
 class ResourceConflictError(DomainError):
@@ -17,7 +27,9 @@ class ResourceConflictError(DomainError):
     Maps to HTTP 409 Conflict.
     """
 
-    pass
+    code: ClassVar[str] = "RESOURCE_CONFLICT"
+    status_code: ClassVar[int] = 409
+    default_message: ClassVar[str] = " Resource already exists"
 
 
 class ResourceNotFoundError(DomainError):
@@ -26,7 +38,9 @@ class ResourceNotFoundError(DomainError):
     Maps to HTTP 404 Not Found.
     """
 
-    pass
+    code: ClassVar[str] = "RESOURCE_NOT_FOUND"
+    status_code: ClassVar[int] = 404
+    default_message: ClassVar[str] = "resource not found"
 
 
 class AuthenticationError(DomainError):
@@ -37,4 +51,6 @@ class AuthenticationError(DomainError):
     to prevent user enumeration attacks at the login endpoint.
     """
 
-    pass
+    code: ClassVar[str] = "AUTHENTICATION_FAILED"
+    status_code: ClassVar[int] = 401
+    default_message: ClassVar[str] = "Invalid email or password"

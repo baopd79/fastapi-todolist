@@ -1,9 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
 from app.core.config import settings
 from app.api.v1 import api_router
+from app.core.exceptions import DomainError
 
 app = FastAPI(title=settings.APP_NAME, debug=settings.DEBUG)
+
+
+@app.exception_handler(DomainError)
+async def domain_exception_handler(request: Request, exc: DomainError) -> JSONResponse:
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.code, "message": exc.message}},
+    )
+
+
 app.include_router(api_router, prefix="/api/v1")
 
 
