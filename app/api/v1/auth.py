@@ -1,9 +1,13 @@
 """Authentication API Routers."""
 
-from fastapi import APIRouter, status, HTTPException
-from app.schemas.auth import UserResponse, UserRegisterRequest
-from app.core.exceptions import ResourceConflictError
-from app.core.deps import AuthServiceDep
+from fastapi import APIRouter, status
+from app.schemas.auth import (
+    UserResponse,
+    UserRegisterRequest,
+    LoginRequest,
+    TokenResponse,
+)
+from app.core.deps import AuthServiceDep, CurrentUserDep
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -17,13 +21,22 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def register(
     payload: UserRegisterRequest, auth_service: AuthServiceDep
 ) -> UserResponse:
-    """Register a new user with email and password.
-
-    Returns 201 Created with the user's public information.
-    Returns 409 Conflict if the email is already registered.
-    """
-    try:
-        user = auth_service.register_user(payload)
-    except ResourceConflictError as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    user = auth_service.register_user(payload)
     return UserResponse.model_validate(user)
+
+
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Login and get access token",
+)
+def login(payload: LoginRequest, auth_service: AuthServiceDep) -> TokenResponse:
+    access_token = auth_service.login(payload)
+    return TokenResponse(access_token=access_token)
+
+
+@router.get("/me", response_model=UserResponse, summary="Get current user info")
+def get_me(current_user: CurrentUserDep) -> UserResponse:
+    """Return the authenticated user's public profile"""
+    return UserResponse.model_validate(current_user)
