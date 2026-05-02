@@ -8,10 +8,15 @@ service layer respnsibilities(trach nhiem):
 from sqlmodel import Session
 
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import UserRegisterRequest, UserResponse
+from app.schemas.auth import (
+    UserRegisterRequest,
+    UserResponse,
+    LoginRequest,
+    TokenResponse,
+)
 from app.models.user import User
-from app.core.exceptions import ResourceConflictError
-from app.core.security import hash_password
+from app.core.exceptions import ResourceConflictError, AuthenticationError
+from app.core.security import hash_password, verify_password, create_access_token
 
 
 class AuthService:
@@ -40,3 +45,16 @@ class AuthService:
         self._session.commit()
         self._session.refresh(created)
         return created
+
+    def login(self, payload: LoginRequest) -> str:
+        """Authenticate user and return JWT access token"""
+        user = self._user_repo.get_by_email(payload.email)
+        if user is None:
+            raise AuthenticationError()
+
+        if not verify_password(payload.password, user.hashed_password):
+            raise AuthenticationError()
+
+        if not user.is_active:
+            raise AuthenticationError()
+        return create_access_token(subject=user.id)

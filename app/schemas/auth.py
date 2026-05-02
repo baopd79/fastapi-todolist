@@ -11,12 +11,17 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
-class UserRegisterRequest(BaseModel):
-    """Request payload for user registration."""
+class EmailNormalizeModel(BaseModel):
+    email: EmailStr = Field(..., max_length=255, description="Email")
 
-    email: EmailStr = Field(
-        ..., max_length=255, description="User email(will be normalized to lowercase)"
-    )
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, v: str) -> str:
+        return v.strip().lower()
+
+
+class UserRegisterRequest(EmailNormalizeModel):
+    """Request payload for user registration."""
 
     password: str = Field(
         ...,
@@ -24,13 +29,6 @@ class UserRegisterRequest(BaseModel):
         max_length=128,
         description="Password(8-128 characters, no other constraints )",
     )
-
-    # cls la class method khac voi self(can data object) thi cls can thong tin class(UserRegisterRequest)
-    @field_validator("email")
-    @classmethod
-    def normalize_email(cls, v: str) -> str:
-        """lowercase and strip email for case-insensitive uniqueness."""
-        return v.strip().lower()
 
 
 class UserResponse(BaseModel):
@@ -42,3 +40,16 @@ class UserResponse(BaseModel):
     email: EmailStr
     is_active: bool
     created_at: datetime
+
+
+class LoginRequest(EmailNormalizeModel):
+    """Request payload for user login"""
+
+    password: str = Field(
+        ..., min_length=1, max_length=128, description="Account Password"
+    )
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
