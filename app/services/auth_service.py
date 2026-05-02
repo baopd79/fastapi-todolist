@@ -34,7 +34,7 @@ class AuthService:
 
         # business rule : never store plaintext password
         hashed = hash_password(payload.password)
-        user = User(email=payload.email, hash_password=hashed, is_active=True)
+        user = User(email=payload.email, hashed_password=hashed, is_active=True)
         # Repository flushes (gets ID), Service commit(transaction boundary)
         created = self._user_repo.create(user)
         self._session.commit()
