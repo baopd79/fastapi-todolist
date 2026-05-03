@@ -5,8 +5,9 @@ from here, so adding new routers only requires updating this file.
 """
 
 from fastapi import APIRouter
-from app.api.v1 import auth
+from app.api.v1 import auth, todo
 
 api_router = APIRouter()
 api_router.include_router(auth.router)
+api_router.include_router(todo.router)
 __all__ = ["api_router"]

@@ -14,6 +14,7 @@ from app.core.security import decode_access_token
 from app.models import User
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from app.services.todo_service import TodoService
 
 # Re-export common dependencies
 # SessionDep -> Depends(get_db)-> goi get_db()-> yield Session
@@ -30,16 +31,15 @@ def get_auth_service(session: SessionDep) -> AuthService:
 
 # flow : AuthServiceDep -> depends(get_auth_service)-> Sessiondep->Depends(get_db)->goi get_db()->Session
 AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
-# Kết luận
 
+
+# Kết luận
 # AuthServiceDep = abstraction cho DI
 # Lợi ích chính:
 # giảm lặp
 # giảm coupling
 # dễ refactor
 # 3. Tại sao tách file deps.py?
-
-
 # Reusable: SessionDep dùng ở mọi router.
 # Centralized: 1 chỗ duy nhất sửa khi đổi DI logic.
 # Avoid circular imports: nếu inline trong router, dễ circular.
@@ -66,3 +66,10 @@ def get_current_user(
 
 
 CurrentUserDep = Annotated[User, Depends(get_current_user)]
+
+
+def get_todo_service(session: SessionDep) -> TodoService:
+    return TodoService(session)
+
+
+TodoServiceDep = Annotated[TodoService, Depends(get_todo_service)]
