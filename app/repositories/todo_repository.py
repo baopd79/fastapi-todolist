@@ -12,10 +12,12 @@ class TodoRepository:
 
     def __init__(self, session: Session) -> None:
         self._session = session
+
     # get_by_id khong filter user_id, tra todo bat ke owner.service check ownership
-    #vi repo la data access. khong biet ai request 
+    # vi repo la data access. khong biet ai request
     def get_by_id(self, todo_id: int) -> Optional[Todo]:
         return self._session.get(Todo, todo_id)
+
     # filter user_id la bat buoc vi list scoped by user
     def list_by_user(
         self,

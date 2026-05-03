@@ -29,7 +29,7 @@ class TodoUpdateRequest(BaseModel):
 
 class TodoResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    int: int
+    id: int
     title: str
     description: Optional[str]
     is_completed: bool
