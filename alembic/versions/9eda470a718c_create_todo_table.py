@@ -44,7 +44,10 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ["user_id"], ["user.id"], name=op.f("fk_todo_user_id_user"),ondelete="CASCADE"
+            ["user_id"],
+            ["user.id"],
+            name=op.f("fk_todo_user_id_user"),
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_todo")),
     )

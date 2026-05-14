@@ -32,8 +32,8 @@ class UserRepository:
         """Return user by email(case-sensitive match)"""
         statement = select(User).where(User.email == email)
         return self._session.exec(statement).first()
-    
-    def create(self, user: User)-> User:
+
+    def create(self, user: User) -> User:
         """Persist a new user.
 
         Adds to session and flushes to obtain auto-generated ID.
@@ -43,5 +43,3 @@ class UserRepository:
         self._session.flush()
         self._session.refresh(user)
         return user
-        
-                                       
