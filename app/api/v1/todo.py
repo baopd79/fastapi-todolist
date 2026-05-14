@@ -72,10 +72,15 @@ def update_todo(
     todo = todo_service.update_todo(todo_id, current_user.id, payload)
     return TodoResponse.model_validate(todo)
 
-@router.delete("/{todo_id}",status_code=status.HTTP_204_NO_CONTENT,summary="Delete a todo",)
+
+@router.delete(
+    "/{todo_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a todo",
+)
 def delete_todo(
-    todo_id:int,
+    todo_id: int,
     current_user: CurrentUserDep,
-    todo_service : TodoServiceDep,
-)-> None:
+    todo_service: TodoServiceDep,
+) -> None:
     todo_service.delete_todo(todo_id, current_user.id)

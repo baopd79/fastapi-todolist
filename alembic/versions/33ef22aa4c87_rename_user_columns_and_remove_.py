@@ -9,8 +9,6 @@ Create Date: 2026-05-02 22:29:35.870643
 from typing import Sequence, Union
 
 from alembic import op
-import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = "33ef22aa4c87"
@@ -30,7 +28,7 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Downgrade schema."""
-   
+
     op.alter_column("user", "updated_at", new_column_name="update_at")
     op.alter_column("user", "hashed_password", new_column_name="hash_password")
     op.create_index(op.f("ix_user_email"), "user", ["email"], unique=True)

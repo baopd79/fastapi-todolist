@@ -11,7 +11,6 @@ from app.core.config import settings
 # Import all models so SQLModel.metadata knows about them
 # IMPORTANT: every new model must be imported here, otherwise autogenerate
 # won't detect it.
-from app.models import User, Todo
 
 # Alembic Config object
 config = context.config

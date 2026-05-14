@@ -10,9 +10,7 @@ from sqlmodel import Session
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import (
     UserRegisterRequest,
-    UserResponse,
     LoginRequest,
-    TokenResponse,
 )
 from app.models.user import User
 from app.core.exceptions import ResourceConflictError, AuthenticationError

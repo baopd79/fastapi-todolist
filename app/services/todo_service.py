@@ -7,7 +7,6 @@ from app.core.exceptions import ResourceNotFoundError
 
 
 class TodoService:
-
     def __init__(self, session: Session) -> None:
         self._session = session
         self._todo_repo = TodoRepository(session)
